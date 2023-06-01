@@ -1,0 +1,95 @@
+version: '3'
+
+networks:
+  solr-starter-cs:
+
+services:
+  solr-starter-cs-1:
+    image: solr
+    container_name: solr-starter-cs-1
+    ports:
+     - "8981:8983"
+    environment:
+      - ZK_HOST=zk-starter-cs-1:2181,zk-starter-cs-2:2181,zk-starter-cs-3:2181
+    networks:
+      - solr-starter-cs
+    depends_on:
+      - zk-starter-cs-1
+      - zk-starter-cs-2
+      - zk-starter-cs-3
+
+  solr-starter-cs-2:
+    image: solr
+    container_name: solr-starter-cs-2
+    ports:
+     - "8982:8983"
+    environment:
+      - ZK_HOST=zk-starter-cs-1:2181,zk-starter-cs-2:2181,zk-starter-cs-3:2181
+    networks:
+      - solr-starter-cs
+    depends_on:
+      - zk-starter-cs-1
+      - zk-starter-cs-2
+      - zk-starter-cs-3
+
+  solr-starter-cs-3:
+    image: solr
+    container_name: solr-starter-cs-3
+    ports:
+     - "8983:8983"
+    environment:
+      - ZK_HOST=zk-starter-cs-1:2181,zk-starter-cs-2:2181,zk-starter-cs-3:2181
+    networks:
+      - solr-starter-cs
+    depends_on:
+      - zk-starter-cs-1
+      - zk-starter-cs-2
+      - zk-starter-cs-3
+
+  zk-starter-cs-1:
+    image: zookeeper
+    container_name: zk-starter-cs-1
+    restart: always
+    hostname: zk-starter-cs-1
+    ports:
+      - 2181:2181
+      - 7000:7000
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zk-starter-cs-1:2888:3888;2181 server.2=zk-starter-cs-2:2888:3888;2181 server.3=zk-starter-cs-3:2888:3888;2181
+      ZOO_4LW_COMMANDS_WHITELIST: mntr, conf, ruok
+      ZOO_CFG_EXTRA: "metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider metricsProvider.httpPort=7000 metricsProvider.exportJvmInfo=true"
+    networks:
+      - solr-starter-cs
+
+  zk-starter-cs-2:
+    image: zookeeper
+    container_name: zk-starter-cs-2
+    restart: always
+    hostname: zk-starter-cs-2
+    ports:
+      - 2182:2181
+      - 7001:7000
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zk-starter-cs-1:2888:3888;2181 server.2=zk-starter-cs-2:2888:3888;2181 server.3=zk-starter-cs-3:2888:3888;2181
+      ZOO_4LW_COMMANDS_WHITELIST: mntr, conf, ruok
+      ZOO_CFG_EXTRA: "metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider metricsProvider.httpPort=7000 metricsProvider.exportJvmInfo=true"
+    networks:
+      - solr-starter-cs
+
+  zk-starter-cs-3:
+    image: zookeeper
+    container_name: zk-starter-cs-3
+    restart: always
+    hostname: zk-starter-cs-3
+    ports:
+      - 2183:2181
+      - 7002:7000
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zk-starter-cs-1:2888:3888;2181 server.2=zk-starter-cs-2:2888:3888;2181 server.3=zk-starter-cs-3:2888:3888;2181
+      ZOO_4LW_COMMANDS_WHITELIST: mntr, conf, ruok
+      ZOO_CFG_EXTRA: "metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider metricsProvider.httpPort=7000 metricsProvider.exportJvmInfo=true"
+    networks:
+      - solr-starter-cs

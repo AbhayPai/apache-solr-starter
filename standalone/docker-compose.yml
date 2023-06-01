@@ -1,0 +1,11 @@
+version: '3'
+services:
+  solr-starter-sa:
+    image: solr
+    container_name: solr-starter-sa
+    ports:
+     - "8983:8983"
+    volumes:
+      - solr-starter-sa-data:/var/solr
+volumes:
+  solr-starter-sa-data:
